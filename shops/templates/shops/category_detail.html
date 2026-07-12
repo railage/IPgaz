@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --white: #ffffff;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --text: #1f2937;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #f8faff, #eef2ff);
+            color: var(--text);
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .header h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--gray);
+            font-size: 17px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 28px;
+            margin-top: 30px;
+        }
+
+        .product {
+            background: white;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0,0,0,.06);
+            transition: .3s;
+        }
+
+        .product:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(0,0,0,.12);
+        }
+
+        .image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #dbeafe, #eef2ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 70px;
+            color: #999;
+        }
+
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .content {
+            padding: 22px;
+        }
+
+        .content h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .delivery {
+            margin-top: 16px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .empty {
+            background: white;
+            padding: 60px;
+            border-radius: 24px;
+            text-align: center;
+            color: var(--gray);
+            box-shadow: 0 12px 35px rgba(0,0,0,.05);
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--gray);
+            padding: 25px;
+        }
+
+        @media (max-width: 700px) {
+            .header h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'shop_detail' shop_id %}" class="back">← Назад в магазин</a>
+
+    <div class="header">
+        <h1>{{ category.name }}</h1>
+        <p>Товары данной категории</p>
+    </div>
+
+    <div class="products">
+        {% for product in products %}
+        <div class="product">
+            <div class="image">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    📦
+                {% endif %}
+            </div>
+            <div class="content">
+                <h2>{{ product.name }}</h2>
+                <div class="bottom">
+                    <div class="price">{{ product.price }} ₽</div>
+                </div>
+                {% if product.delivery_schedule %}
+                <div class="delivery">
+                    📅 {{ product.delivery_schedule }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty">
+            <h2>Товаров пока нет</h2>
+            <p style="margin-top:10px;">Добавьте товары через Admin.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer>
+        📧 shop@example.com
+    </footer>
+
+</div>
+
+</body>
+</html>

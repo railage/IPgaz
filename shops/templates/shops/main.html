@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наши магазины</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --white: #ffffff;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --text: #1f2937;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #f8faff, #eef2ff);
+            color: var(--text);
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1300px;
+            margin: auto;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 70px 20px 50px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: var(--gray);
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding-bottom: 60px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(0,0,0,.06);
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(0,0,0,.12);
+        }
+
+        .card .photo {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #eef2ff;
+        }
+
+        .card .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card .photo .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            color: #999;
+            background: linear-gradient(135deg, #dbeafe, #eef2ff);
+        }
+
+        .card .content {
+            padding: 24px;
+        }
+
+        .card .content h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .card .location {
+            color: var(--gray);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card .address {
+            color: #4b5563;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            text-align: center;
+            padding: 13px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: .25s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #374151;
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: #f3f4f6;
+        }
+
+        .empty {
+            grid-column: 1/-1;
+            background: white;
+            padding: 60px;
+            border-radius: 24px;
+            text-align: center;
+            color: var(--gray);
+            box-shadow: 0 12px 35px rgba(0,0,0,.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 34px;
+            }
+            .hero p {
+                font-size: 16px;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="hero">
+        <h1>Наши магазины</h1>
+        <p>Выберите ближайший магазин и ознакомьтесь с ассортиментом.</p>
+    </div>
+
+    <div class="grid">
+        {% for shop in shops %}
+        <div class="card" onclick="window.location.href='{% url 'shop_detail' shop.id %}'">
+            <div class="photo">
+                {% if shop.photo %}
+                    <img src="{{ shop.photo.url }}" alt="{{ shop.name }}">
+                {% else %}
+                    <div class="placeholder">🏪</div>
+                {% endif %}
+            </div>
+            <div class="content">
+                <h2>{{ shop.name }}</h2>
+                <div class="location">📍 {{ shop.village }}</div>
+                <div class="address">{{ shop.address }}</div>
+                <div class="buttons">
+                    <a href="{% url 'shop_detail' shop.id %}" class="btn btn-primary">Подробнее</a>
+                    <a href="https://yandex.ru/maps/?pt={{ shop.longitude }},{{ shop.latitude }}&z=17" target="_blank" class="btn btn-outline">Карта</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty">
+            <h2>Магазины пока не добавлены</h2>
+            <p style="margin-top:10px;">Добавьте первый магазин через Django Admin.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<footer>© 2026 Все права защищены</footer>
+
+</body>
+</html>
